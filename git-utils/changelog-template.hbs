@@ -1,0 +1,14 @@
+{{#each releases}}
+  ### [{{title}}]({{href}})
+  Release date ISO: {{isoDate}} 
+  Release date: {{niceDate}}
+  {{#each merges}}
+    - Merge: {{id}} - {{message}}, Link to pr {{href}}.
+  {{/each}}
+  {{#each fixes}}
+    - Fix: {{id}} - {{commit}} - {{commit.subject}}, Link yo issue {{href}}.
+  {{/each}}
+  {{#each commits}}
+    - Commit: {{shorthash}}, - {{subject}}, Link to commit {{href}}.
+  {{/each}}
+{{/each}}
