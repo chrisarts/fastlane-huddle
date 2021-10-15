@@ -15,11 +15,48 @@
 
 default_platform(:ios)
 
+XCODEPROJ = 'FastlaneHuddle.xcodeproj'
+WORKSPACE = 'FastlaneHuddle.xcworkspace'
+SCHEME = 'FastLaneHuddle'
+
+before_all do
+  desc 'Ensuring git branch'
+  ensure_git_branch
+  ensure_git_status_clean
+  yarn(
+    command: 'create-changelog'
+  )
+end
+
+# YARN LANES
+lane :patch_release do
+  yarn(
+    command: 'version',
+    flags: '--patch'
+  )
+  beta_release
+end
+lane :minor_release do
+  yarn(
+    command: 'version',
+    flags: '--minor'
+  )
+  beta
+end
+
+lane :major_release do
+  yarn(
+    command: 'version',
+    flags: '--major'
+  )
+  beta_release
+end
+
 platform :ios do
   desc "Push a new beta build to TestFlight"
-  lane :beta do
-    increment_build_number(xcodeproj: "FastlaneHuddle.xcodeproj")
-    build_app(workspace: "FastlaneHuddle.xcworkspace", scheme: "FastlaneHuddle")
+  private_lane :beta_relese do
+    increment_build_number
+    build_app(workspace: WORKSPACE, scheme: SCHEME)
     upload_to_testflight
   end
 end
